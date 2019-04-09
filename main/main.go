@@ -4,13 +4,22 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	webcache "github.com/iphuket/web-cache"
 )
 
 func main() {
-	http.HandleFunc("/get", get)
-	http.HandleFunc("/set", set)
-	http.ListenAndServe(":5645", nil)
+	app := gin.New()
+	app.Any("/get", getGin)
+	app.Any("/set", setGin)
+	app.Run(":5645")
+}
+func getGin(c *gin.Context) {
+	get(c.Writer, c.Request)
+}
+
+func setGin(c *gin.Context) {
+	set(c.Writer, c.Request)
 }
 func get(rw http.ResponseWriter, req *http.Request) {
 	key := req.FormValue("key")
